@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require(fs)
+const fs = require('fs');
 const app = express();
 const PORT = 3001;
 
@@ -27,8 +27,11 @@ app.get("/", (req, res) => {
 //Parsing through notes data and posting it on the notes.html 
 
 app.get("/api/notes",(req, res) => {
+    fs.readFileSync("./db/db.json","utf-8").then(function(response){
+        notesInfo = JSON.parse(response);
+        res.json(notesInfo);
+    });
 
-    
 });
 
 // using express lisener to go to PORT 3001

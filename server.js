@@ -44,13 +44,14 @@ app.post("/api/notes", (req, res) => {
           return console.log(error)
       }
       notes = JSON.parse(notes)
-
-      let newNote = { 
+      var id = notes.length + 1
+      let newNoteObj = { 
         title: currentNote.title, 
-        text: currentNote.text, 
+        text: currentNote.text,
+        id:id 
         }
     
-        var newNotesArr = notes.concat(newNote)
+        var newNotesArr = notes.concat(newNoteObj)
 
       //write new array to db.json file and return it to user
       fs.writeFile(path.join(__dirname, "./db/db.json"), JSON.stringify(newNotesArr), (error, data) => {
@@ -63,6 +64,31 @@ app.post("/api/notes", (req, res) => {
   });
  
 });
+
+app.delete(("/api/notes:id"),(req, res) => {
+  let idDelete = JSON.parse(req.params.id);
+  fs.readFile(path.join(__dirname, "./db/db.json"), JSON.stringify(newNotesArr), (error, data) => {
+    if (error) {
+      return error
+    }
+  let notesArr = JSON.parse(data);
+  for (var i=0; i<notesArr.length; i++){
+    if(idDelete== notesArr[i].id) {
+      notesArr.splice(i,1);
+
+      fs.writeFile(path.join(__dirname, "./db/db.json"), JSON.stringify(notesArr), (error, data) => {
+       if (error) {
+         return error
+       }
+       console.log(notesArr)
+       res.json(notesArr);
+     })
+    }
+ }
+ 
+}); 
+});
+
 
 
 // using express lisener to go to PORT 3001

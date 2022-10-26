@@ -49,10 +49,8 @@ app.post("/api/notes", (req, res) => {
         title: currentNote.title, 
         text: currentNote.text, 
         }
-      //merge new note with existing notes array
-      //used concat so the new array will return 
-
-      var newNotesArr = notes.concat(newNote)
+    
+        var newNotesArr = notes.concat(newNote)
 
       //write new array to db.json file and return it to user
       fs.writeFile(path.join(__dirname, "./db/db.json"), JSON.stringify(newNotesArr), (error, data) => {
@@ -65,6 +63,7 @@ app.post("/api/notes", (req, res) => {
   });
  
 });
+
 
 // using express lisener to go to PORT 3001
 app.listen(PORT, () => {

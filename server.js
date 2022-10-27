@@ -33,62 +33,45 @@ app.get("/api/notes", (req, res) => {
 });
 
 
-//use POST method to bring user input to backend
-app.post("/api/notes", (req, res) => {
-    //declare const for the note currently being saved by user
-    const currentNote = req.body;
-    //retrieve notes from db.json, get id of last note, add 1 to it to create 
-    //new id, save current note with new id
-  fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (error, notes) => {
-      if (error) {
-          return console.log(error)
-      }
-      notes = JSON.parse(notes)
-      var id = notes.length + 1
-      let newNoteObj = { 
-        title: currentNote.title, 
-        text: currentNote.text,
-        id:id 
-        }
-    
-        var newNotesArr = notes.concat(newNoteObj)
+// //use POST method to bring user input to backend
+app.post("/notes", (req, res) => {
+  readFileAsync("db/db.json", "utf8").then(function (data) {
+    // Parse data to get an array of objects
+    notesInfo = JSON.parse(data);
 
-      //write new array to db.json file and return it to user
-      fs.writeFile(path.join(__dirname, "./db/db.json"), JSON.stringify(newNotesArr), (error, data) => {
-        if (error) {
-          return error
-        }
-        console.log(newNotesArr)
-        res.json(newNotesArr);
-      })
+    let newNote = req.body;
+    let currentID = notesData.length;
+
+    newNote.id = currentID + 1;
+    // Add new note to the array of note objects
+    notesInfo.push(newNote);
+
+    notesInfo = JSON.stringify(notesInfo);
+
+    writeFileAsync("db/db.json", notesInfo).then(function (data) {
+      console.log("Note has been added.");
+    });
+    res.json(notesInfo);
   });
- 
 });
 
-app.delete(("/api/notes:id"),(req, res) => {
-  let idDelete = JSON.parse(req.params.id);
-  fs.readFile(path.join(__dirname, "./db/db.json"), JSON.stringify(newNotesArr), (error, data) => {
-    if (error) {
-      return error
-    }
-  let notesArr = JSON.parse(data);
-  for (var i=0; i<notesArr.length; i++){
-    if(idDelete== notesArr[i].id) {
-      notesArr.splice(i,1);
 
-      fs.writeFile(path.join(__dirname, "./db/db.json"), JSON.stringify(notesArr), (error, data) => {
-       if (error) {
-         return error
-       }
-       console.log(notesArr)
-       res.json(notesArr);
-     })
+app.delete("/notes/:id", (req, res) => {
+
+  let selID = JSON.parse(req.params.id);
+
+  for (let i = 0; i < notesInfo.length; i++) {
+    if (selID === notesInfo[i].id) {
+      notesInfo.splice(i,1);
+      let noteJSON = JSON.stringify(notesInfo,null,2);
+
+      writeFileAsync("db/db.json", noteJSON).then(function () {
+        console.log("Note has been deleted.");
+      });
     }
- }
- 
-}); 
+  }
+  res.json(notesInfo);
 });
-
 
 
 // using express lisener to go to PORT 3001

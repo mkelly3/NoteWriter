@@ -54,7 +54,7 @@ fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (error,notes) => {
 
 //use POST method to bring user input to backend
 app.post("/api/notes", (req, res) => {
-  //declare const for the note currently being saved by user
+
   const currentNote = req.body;
   //retrieve notes from db.json, get id of last note, add 1 to it to create 
   //new id, save current note with new id
@@ -63,8 +63,6 @@ fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (error, notes) => {
         return console.log(error)
     }
     notesInfo = JSON.parse(notes)
-    //assign unique id to each new note depending on last id.
-    //if no items in notes array, assign id as 10
     var noteId = notesInfo.length;
     //create new note object
     let newNote = { 

@@ -14,25 +14,6 @@ app.use(express.json());
 app.use(express.static('public'));
 
 
-// //uses express to direct user to either the Index.html or notes html 
-// app.get("/", (req, res) => {
-//     res.sendFile(path.join(__dirname, "./public/index.html"))
-// });
-
-// app.get("/notes", (req, res) => {
-//    res.sendFile(path.join(__dirname, "./public/notes.html"))
-// });
-
-// //uses the express get method to get all of the notes and parse in JSON
-// app.get("/api/notes", (req, res) => {
-//     fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (error,notes) => {
-//       if (error) {
-//           return console.log(error)
-//       }
-//       res.json(JSON.parse(notes))
-//   })
-// });
-
 //direct user to correct page depending on url
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/index.html"))
@@ -41,7 +22,7 @@ app.get("/notes", (req, res) => {
  res.sendFile(path.join(__dirname, "./public/notes.html"))
 });
 
-//send json of all notes if user accesses /api/notes
+//getting data from db.json and using JSON parse 
 app.get("/api/notes", (req, res) => {
 fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (error,notes) => {
     if (error) {
@@ -56,13 +37,13 @@ fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (error,notes) => {
 app.post("/api/notes", (req, res) => {
 
   const currentNote = req.body;
-  //retrieve notes from db.json, get id of last note, add 1 to it to create 
-  //new id, save current note with new id
+  //Retrive data from db.JSOn
 fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (error, notes) => {
     if (error) {
         return console.log(error)
     }
     notesInfo = JSON.parse(notes)
+    //Make the note id equal to the length of the notesinfo array
     var noteId = notesInfo.length;
     //create new note object
     let newNote = { 

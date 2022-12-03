@@ -5,7 +5,6 @@ This application allows the user to input a title and information for each note 
 
 ## Table of Contents
 - [Description](#description)
-- [Image]](#image)
 - [Code Snippet](#code-snippet)
 - [Technologies Used](#technologies-used)
 - [Installation](#instalation)
